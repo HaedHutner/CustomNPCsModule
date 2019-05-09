@@ -19,7 +19,7 @@ public class CustomNpcRegistry {
     }
 
     public void registerNpc(String name, ICustomNpc npc) {
-         npcs.put(name, npc);
+        npcs.put(name, npc);
     }
 
     public Optional<ICustomNpc> getNpc(String name) {

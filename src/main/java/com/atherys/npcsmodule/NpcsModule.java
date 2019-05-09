@@ -40,12 +40,12 @@ public class NpcsModule {
     @Listener
     public void onInit(GameInitializationEvent event) {
         JavaScriptLibrary.getInstance().extendWith(new NpcLibrary());
+        instance = this;
+        registry = CustomNpcRegistry.getInstance();
     }
 
     @Listener
     public void onStart(GameStartedServerEvent event) {
-        instance = this;
-        registry = CustomNpcRegistry.getInstance();
 
         for (IWorld world : NpcAPI.Instance().getIWorlds()) {
             for (IEntity entity : world.getAllEntities(EntityType.NPC)) {

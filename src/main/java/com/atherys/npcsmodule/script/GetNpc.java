@@ -1,13 +1,13 @@
 package com.atherys.npcsmodule.script;
 
-import noppes.npcs.api.NpcAPI;
+import com.atherys.npcsmodule.NpcsModule;
 import noppes.npcs.api.entity.ICustomNpc;
 
 import java.util.function.Function;
 
-public class GetNpc implements Function<Integer, ICustomNpc> {
+public class GetNpc implements Function<String, ICustomNpc> {
     @Override
-    public ICustomNpc apply(Integer integer) {
-        return null;
+    public ICustomNpc apply(String name) {
+        return NpcsModule.getNpcRegistry().getNpc(name).orElse(null);
     }
 }

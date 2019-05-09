@@ -1,16 +1,19 @@
 package com.atherys.npcsmodule;
 
+import com.atherys.npcsmodule.script.NpcLibrary;
+import com.atherys.script.js.JavaScriptLibrary;
 import com.google.inject.Inject;
+import noppes.npcs.api.IWorld;
 import noppes.npcs.api.NpcAPI;
 import noppes.npcs.api.constants.EntityType;
 import noppes.npcs.api.entity.ICustomNpc;
+import noppes.npcs.api.entity.IEntity;
 import org.slf4j.Logger;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
-
-import java.util.Arrays;
 
 @Plugin(id = NpcsModule.ID,
         name = NpcsModule.NAME,
@@ -28,14 +31,37 @@ public class NpcsModule {
     static final String VERSION = "0.0.1";
 
     @Inject
-    Logger logger;
+    private Logger logger;
+
+    private CustomNpcRegistry registry;
+
+    private static NpcsModule instance;
+
+    @Listener
+    public void onInit(GameInitializationEvent event) {
+        JavaScriptLibrary.getInstance().extendWith(new NpcLibrary());
+    }
 
     @Listener
     public void onStart(GameStartedServerEvent event) {
-        Arrays.asList(NpcAPI.Instance().getIWorlds()).forEach(world -> {
-            Arrays.asList(world.getAllEntities(EntityType.NPC)).forEach(entity -> {
-                logger.info(((ICustomNpc) entity).getDisplay().getName());
-            });
-        });
+        instance = this;
+        registry = CustomNpcRegistry.getInstance();
+
+        for (IWorld world : NpcAPI.Instance().getIWorlds()) {
+            for (IEntity entity : world.getAllEntities(EntityType.NPC)) {
+                ICustomNpc npc = (ICustomNpc) entity;
+                registry.registerNpc(npc.getDisplay().getName(), npc);
+            }
+        }
+
+        NpcAPI.Instance().events().register(NpcListener.class);
+    }
+
+    public static CustomNpcRegistry getNpcRegistry() {
+        return instance.registry;
+    }
+
+    public static Logger getLogger() {
+        return instance.logger;
     }
 }

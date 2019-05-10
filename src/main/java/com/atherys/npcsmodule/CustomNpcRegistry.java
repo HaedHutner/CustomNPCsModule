@@ -25,4 +25,8 @@ public class CustomNpcRegistry {
     public Optional<ICustomNpc> getNpc(String name) {
         return Optional.ofNullable(npcs.get(name));
     }
+
+    public void clearAll() {
+        npcs.clear();
+    }
 }

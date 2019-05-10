@@ -10,6 +10,7 @@ import noppes.npcs.api.entity.ICustomNpc;
 import noppes.npcs.api.entity.IEntity;
 import org.slf4j.Logger;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Dependency;
@@ -46,6 +47,17 @@ public class NpcsModule {
 
     @Listener
     public void onStart(GameStartedServerEvent event) {
+        NpcAPI.Instance().events().register(NpcListener.class);
+        loadNpcs();
+    }
+
+    @Listener
+    public void onReload(GameReloadEvent event) {
+        loadNpcs();
+    }
+
+    private void loadNpcs() {
+        registry.clearAll();
 
         for (IWorld world : NpcAPI.Instance().getIWorlds()) {
             for (IEntity entity : world.getAllEntities(EntityType.NPC)) {
@@ -53,8 +65,6 @@ public class NpcsModule {
                 registry.registerNpc(npc.getDisplay().getName(), npc);
             }
         }
-
-        NpcAPI.Instance().events().register(NpcListener.class);
     }
 
     public static CustomNpcRegistry getNpcRegistry() {

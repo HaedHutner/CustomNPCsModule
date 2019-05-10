@@ -1,6 +1,6 @@
 /**
  * # NPC Functions
  * These functions allow you access and modify NPCs from the CustomNPCs mod.
- * @file NPC-Functions
+ * @file README
  */
 package com.atherys.npcsmodule.script;

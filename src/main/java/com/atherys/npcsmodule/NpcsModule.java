@@ -10,6 +10,7 @@ import noppes.npcs.api.entity.ICustomNpc;
 import noppes.npcs.api.entity.IEntity;
 import org.slf4j.Logger;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -45,10 +46,10 @@ public class NpcsModule {
         registry = CustomNpcRegistry.getInstance();
     }
 
-    @Listener
+    @Listener(order = Order.EARLY)
     public void onStart(GameStartedServerEvent event) {
-        NpcAPI.Instance().events().register(NpcListener.class);
         loadNpcs();
+        NpcAPI.Instance().events().register(NpcListener.class);
     }
 
     @Listener
